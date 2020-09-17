@@ -104,5 +104,40 @@ class MyImagick
     }
 
     /** RESERVED FOR FILTER METHODS */
+    public function nashville()
+    {
+        $this->tempfile();
 
+        $this->colortone($this->_tmp, '#222b6d', 100, 0);
+        $this->colortone($this->_tmp, '#f7daae', 100, 1);
+
+        $this->execute("convert $this->_tmp -contrast -modulate 100,150,100 -auto-gamma $this->_tmp");
+        $this->frame($this->_tmp, __FUNCTION__);
+
+        $this->output();
+    }
+    public function lomo()
+    {
+        $this->tempfile();
+
+        $command = "convert {$this->_tmp} -channel R -level 33% -channel G -level 33% $this->_tmp";
+
+        $this->execute($command);
+        $this->vignette($this->_tmp);
+
+        $this->output();
+    }
+    public function kelvin()
+    {
+        $this->tempfile();
+
+        $this->execute("convert
+    ( $this->_tmp -auto-gamma -modulate 120,50,100 )
+    ( -size {$this->_width}x{$this->_height} -fill 'rgba(255,153,0,0.5)' -draw 'rectangle 0,0 {$this->_width},{$this->_height}' )
+    -compose multiply
+    $this->_tmp");
+        $this->frame($this->_tmp, __FUNCTION__);
+
+        $this->output();
+    }
 }
